@@ -3,8 +3,57 @@
   text-align: center;
   height: 5vh;
   font-size: 25px;
-  padding-top: 1vh;
   font-weight: bold;
   color: white;
   font-family: Arial, Helvetica, sans-serif;
+  margin-top: 2vh;
+  margin-bottom: 1vh;
+}
+
+.card-question {
+  width: 30%;
+  height: 50vh;
+  border-radius: 20px;
+  background: white;
+  position: relative;
+  padding: 1.8rem;
+  border: 2px solid black;
+  transition: 0.5s ease-out;
+  overflow: visible;
+  margin: 15vh auto 0 auto;
+}
+
+.card-details {
+  color: black;
+  height: 100%;
+  gap: 0.8em;
+  display: grid;
+  place-content: center;
+}
+
+.card-button {
+  transform: translate(-50%, 125%);
+  width: 40%;
+  border-radius: 1rem;
+  border: none;
+  background-color: #90d5ff;
+  color: #fff;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  opacity: 0;
+  transition: 0.3s ease-out;
+  cursor: pointer;
+}
+
+.card-question:hover {
+  border-color: #90d5ff;
+  box-shadow: 0 4px 18px 0 rgba(0, 0, 0, 0.25);
+}
+
+.card-question:hover .card-button {
+  transform: translate(-50%, 50%);
+  opacity: 1;
 }
