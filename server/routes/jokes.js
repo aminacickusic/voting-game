@@ -73,13 +73,13 @@ router.post('/:id', async (req, res) => {
             return res.status(404).json({ error: "Joke not found" });
         }
 
-        
+
         const voteIndex = joke.votes.findIndex(v => v.label === emoji);
         if (voteIndex === -1) {
             return res.status(400).json({ error: "Invalid emoji vote" });
         }
 
-        
+
         joke.votes[voteIndex].value += 1;
         await joke.save();
 
@@ -113,6 +113,21 @@ router.put('/:id', async (req, res) => {
     }
 });
 
+router.delete('/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const deletedJoke = await Joke.findByIdAndDelete(id);
+
+        if (!deletedJoke) {
+            return res.status(404).json({ error: 'Joke not found' });
+        }
+
+        res.json({ message: 'Joke deleted successfully!' });
+    } catch (error) {
+        console.error('Error deleting joke:', error);
+        res.status(500).json({ error: 'Failed to delete joke' });
+    }
+});
 
 
 module.exports = router;

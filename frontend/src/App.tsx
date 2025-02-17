@@ -27,6 +27,27 @@ function App() {
     }
   };
 
+  const handleDelete = async () => {
+    if (!joke) return;
+
+    try {
+      const response = await fetch(
+        `http://localhost:9000/api/joke/${joke._id}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to delete joke");
+      }
+
+      fetchJoke();
+    } catch (error) {
+      console.error("Error deleting joke:", error);
+    }
+  };
+
   const handleVote = async (emoji: string) => {
     if (!joke) return;
 
@@ -97,6 +118,7 @@ function App() {
             votes={joke.votes}
             onVote={handleVote}
             onUpdate={handleUpdateJoke}
+            onDelete={handleDelete}
           />
         ) : (
           <p>Loading joke...</p>

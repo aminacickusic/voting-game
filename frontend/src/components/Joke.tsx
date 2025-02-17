@@ -16,6 +16,7 @@ type JokeProps = {
   votes: Vote[];
   onVote: (emoji: string) => void;
   onUpdate: (updatedQuestion: string, updatedAnswer: string) => void;
+  onDelete: () => void;
 };
 
 export default function Joke({
@@ -25,6 +26,7 @@ export default function Joke({
   votes,
   onVote,
   onUpdate,
+  onDelete,
 }: JokeProps) {
   const [newQuestion, setNewQuestion] = useState(question);
   const [newAnswer, setNewAnswer] = useState(answer);
@@ -53,10 +55,9 @@ export default function Joke({
         <FontAwesomeIcon
           icon={faPenToSquare}
           onClick={openDialog}
-          style={{ cursor: "pointer", marginRight: "10px" }}
+          className="edit-icon"
         />
-
-        <FontAwesomeIcon icon={faTrashCan} style={{ cursor: "pointer" }} />
+        <FontAwesomeIcon icon={faTrashCan} onClick={onDelete} />
       </div>
 
       <div className="joke-container">

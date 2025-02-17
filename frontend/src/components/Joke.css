@@ -34,21 +34,26 @@ h2 {
 }
 
 .button-blue {
-    outline: none;
-    height: 40%;
-    text-align: center;
-    width: 30%;
-    border-radius:40px;
-    background: #fff;
-    border: 2px solid  #90d5ff;;
-    color:  black;
-    text-shadow:0;
-    font-size: 12px;
-    cursor: pointer;
-    transition: all 0.25s ease;
-  }
+  outline: none;
+  height: 40%;
+  text-align: center;
+  width: 30%;
+  border-radius: 40px;
+  background: #fff;
+  border: 2px solid #90d5ff;
+  color: black;
+  text-shadow: 0;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
 
-  .button-blue:hover {
-    color:white;
-    background: lightblue;
-  }
+.button-blue:hover {
+  color: white;
+  background: lightblue;
+}
+
+.edit-icon {
+  cursor: "pointer";
+  margin-right: "10px";
+}
