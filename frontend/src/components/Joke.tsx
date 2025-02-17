@@ -3,43 +3,37 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrashCan } from "@fortawesome/free-regular-svg-icons";
 
-export type Vote = {
-  value: number;
+
+type Vote = {
   label: string;
+  value: number;
 };
 
-export type JokeProps = {
+type JokeProps = {
   question: string;
   answer: string;
   votes: Vote[];
   onVote: (emoji: string) => void;
 };
 
-function Joke({ question, answer, votes, onVote }: JokeProps) {
+export default function Joke({ question, answer, votes, onVote }: JokeProps) {
   return (
     <>
-      <div className="joke-options">
+    <div className="joke-options">
         <FontAwesomeIcon icon={faPenToSquare} />
-        <FontAwesomeIcon icon={faTrashCan} />
+         <FontAwesomeIcon icon={faTrashCan} />
+    </div>
+    <div className="joke-container">
+      <h2 className="question-style">{question}</h2>
+      <p className="answer-style">{answer}</p>
+      <div className="emoji-container">
+        {votes.map((vote) => (
+          <button className="button-blue" key={vote.label} onClick={() => onVote(vote.label)}>
+            {vote.label} {vote.value}
+          </button>
+        ))}
       </div>
-      <div className="joke-container">
-        <h2 className="question-style">{question}</h2>
-        <p className="answer-style">{answer}</p>
-
-        <div className="emoji-container">
-          {votes.map((vote) => (
-            <button
-              key={vote.label}
-              className="button-blue"
-              onClick={() => onVote(vote.label)}
-            >
-              {vote.label} ({vote.value})
-            </button>
-          ))}
-        </div>
-      </div>
+    </div>
     </>
   );
 }
-
-export default Joke;

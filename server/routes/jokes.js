@@ -63,5 +63,34 @@ router.get('/', async (req, res) => {
 });
 
 
+router.post('/:id', async (req, res) => {
+    const { id } = req.params;
+    const { emoji } = req.body;
+
+    try {
+        const joke = await Joke.findById(id);
+        if (!joke) {
+            return res.status(404).json({ error: "Joke not found" });
+        }
+
+        
+        const voteIndex = joke.votes.findIndex(v => v.label === emoji);
+        if (voteIndex === -1) {
+            return res.status(400).json({ error: "Invalid emoji vote" });
+        }
+
+        
+        joke.votes[voteIndex].value += 1;
+        await joke.save();
+
+        res.json({ message: "Vote recorded", votes: joke.votes });
+    } catch (error) {
+        console.error("Error submitting vote:", error);
+        res.status(500).json({ error: "Failed to submit vote" });
+    }
+});
+
+
+
 module.exports = router;
 

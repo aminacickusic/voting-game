@@ -1,59 +1,74 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 import Joke from "./components/Joke";
 
+type Vote = {
+  value: number;
+  label: string;
+};
+
+type JokeData = {
+  _id: string;
+  question: string;
+  answer: string;
+  votes: Vote[];
+};
+
 function App() {
-  const initialJokes = [
-    {
-      id: 1,
-      question: "Why did the developer go broke?",
-      answer: "Because he used up all his cache!",
-      votes: [
-        { value: 10, label: "😂" },
-        { value: 5, label: "👍" },
-        { value: 3, label: "❤️" },
-      ],
-    },
-    {
-      id: 2,
-      question: "How do you comfort a JavaScript bug?",
-      answer: "You console it!",
-      votes: [
-        { value: 8, label: "😂" },
-        { value: 4, label: "👍" },
-        { value: 2, label: "❤️" },
-      ],
-    },
-  ];
+  const [joke, setJoke] = useState<JokeData | null>(null);
 
-  const [jokeIndex, setJokeIndex] = useState(0);
-  const [jokes, setJokes] = useState(initialJokes);
 
-  const handleVote = (emoji: String) => {
-    const updatedJokes = [...jokes];
-    const joke = updatedJokes[jokeIndex];
-
-    const vote = joke.votes.find((v) => v.label === emoji);
-    if (vote) {
-      vote.value += 1;
+  const fetchJoke = async () => {
+    try {
+      const response = await fetch("http://localhost:9000/api/joke");
+      const data = await response.json();
+      setJoke(data);
+    } catch (error) {
+      console.error("Error fetching joke:", error);
     }
-
-    setJokes(updatedJokes);
   };
 
-  const nextJoke = () => {
-    setJokeIndex((prevIndex) => (prevIndex + 1) % jokes.length);
+  
+  const handleVote = async (emoji: string) => {
+    if (!joke) return;
+
+    try {
+      const response = await fetch(`http://localhost:9000/api/joke/${joke._id}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ emoji }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to submit vote");
+      }
+
+      const updatedJoke = await response.json();
+      setJoke((prev) => prev ? { ...prev, votes: updatedJoke.votes } : null);
+    } catch (error) {
+      console.error("Error submitting vote:", error);
+    }
   };
+
+  useEffect(() => {
+    fetchJoke();
+  }, []);
 
   return (
     <>
       <div className="header">Voting Game</div>
       <div className="card-question">
-        <Joke {...jokes[jokeIndex]} onVote={handleVote} />
-        <button
-          onClick={nextJoke}
-          className="card-button"
-        >
+        {joke ? (
+          <Joke
+            question={joke.question}
+            answer={joke.answer}
+            votes={joke.votes}
+            onVote={handleVote}
+          />
+        ) : (
+          <p>Loading joke...</p>
+        )}
+        <button onClick={fetchJoke} className="card-button">
           NEXT JOKE &#10140;
         </button>
       </div>
