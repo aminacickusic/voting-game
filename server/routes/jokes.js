@@ -91,6 +91,29 @@ router.post('/:id', async (req, res) => {
 });
 
 
+router.put('/:id', async (req, res) => {
+    const { id } = req.params;
+    const { question, answer } = req.body;
+
+    try {
+        const updatedJoke = await Joke.findByIdAndUpdate(
+            id,
+            { question, answer },
+            { new: true }
+        );
+
+        if (!updatedJoke) {
+            return res.status(404).json({ error: "Joke not found" });
+        }
+
+        res.json(updatedJoke);
+    } catch (error) {
+        console.error("Error updating joke:", error);
+        res.status(500).json({ error: "Failed to update joke" });
+    }
+});
+
+
 
 module.exports = router;
 

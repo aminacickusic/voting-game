@@ -17,7 +17,6 @@ type JokeData = {
 function App() {
   const [joke, setJoke] = useState<JokeData | null>(null);
 
-
   const fetchJoke = async () => {
     try {
       const response = await fetch("http://localhost:9000/api/joke");
@@ -28,25 +27,57 @@ function App() {
     }
   };
 
-  
   const handleVote = async (emoji: string) => {
     if (!joke) return;
 
     try {
-      const response = await fetch(`http://localhost:9000/api/joke/${joke._id}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ emoji }),
-      });
+      const response = await fetch(
+        `http://localhost:9000/api/joke/${joke._id}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ emoji }),
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Failed to submit vote");
       }
 
       const updatedJoke = await response.json();
-      setJoke((prev) => prev ? { ...prev, votes: updatedJoke.votes } : null);
+      setJoke((prev) => (prev ? { ...prev, votes: updatedJoke.votes } : null));
     } catch (error) {
       console.error("Error submitting vote:", error);
+    }
+  };
+
+  const handleUpdateJoke = async (
+    updatedQuestion: string,
+    updatedAnswer: string
+  ) => {
+    if (!joke) return;
+
+    try {
+      const response = await fetch(
+        `http://localhost:9000/api/joke/${joke._id}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            question: updatedQuestion,
+            answer: updatedAnswer,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to update joke");
+      }
+
+      const updatedJoke = await response.json();
+      setJoke(updatedJoke);
+    } catch (error) {
+      console.error("Error updating joke:", error);
     }
   };
 
@@ -60,10 +91,12 @@ function App() {
       <div className="card-question">
         {joke ? (
           <Joke
+            _id={joke._id}
             question={joke.question}
             answer={joke.answer}
             votes={joke.votes}
             onVote={handleVote}
+            onUpdate={handleUpdateJoke}
           />
         ) : (
           <p>Loading joke...</p>

@@ -8,7 +8,7 @@ const app = express();
 const url = "mongodb://localhost/voting_game";
 
 const corsOptions = {
-    origin: ["http://localhost:5173"], 
+    origin: ["http://localhost:5173"],
 };
 
 app.use(cors(corsOptions));
